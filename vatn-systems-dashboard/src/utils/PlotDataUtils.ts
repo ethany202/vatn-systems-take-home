@@ -1,6 +1,14 @@
 import type { PlotData, PlotPoint, PlotMetrics } from "./model";
 
 
+/**
+ * 
+ * @param parsedData List of any objects, in which any consists of key-value pairs representing column name and value
+ */
+export function collectPlotData(parsedData: any[]){
+
+}
+
 export function generatePlotTitle(plotData: PlotData){
     const {
         xLabel,

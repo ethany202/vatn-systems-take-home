@@ -37,14 +37,16 @@ export default function ManagePlots(){
     }, []);
 
     return (
-        <div className="w-full flex flex-col font-['Helvetica_Neue',Helvetica,Arial,sans-serif]">
-            {/* Render a single plot with multiple lines using Victory */}
+        <div className="w-7/8">
+            <h1 className="page-header text-white px-2 text-center">View Plot Data</h1>
+
+
             <div className="flex gap-8 w-full justify-center">
 
                 {/* Left side: chart */}
-                <Card sx={{ backgroundColor: '#1E1E1E', color: 'white', width: '750px', padding: '1rem', margin: "0 1rem", height: '500px'}}>
+                <Card sx={{ backgroundColor: '#060606',  border: '2px dashed #222222', borderRadius: '1rem', color: 'white', width: '75%', padding: '1.75rem', margin: "0 1rem"}}>
                     <CardHeader
-                        title={<Typography variant="h4" component="div" sx={{ color: '#B0CCD9' }}>
+                        title={<Typography variant="h5" component="div" sx={{ color: '#B0CDD9' }}>
                             {allPlotData[visibleGraph].yLabel} VS {allPlotData[visibleGraph].xLabel}
                         </Typography>}
                         subtitle={
@@ -59,7 +61,7 @@ export default function ManagePlots(){
                                 <XAxis dataKey="x" />
                                 <YAxis width="auto" label={{angle: -90}}/>
                                 <Tooltip />
-                                {/* <Legend /> */}
+                                <Legend />
                                 <Line type="monotone" dataKey="y" stroke={allPlotData[visibleGraph].lineColor} activeDot={{r: 8}}/>
                             </LineChart>
                         </ResponsiveContainer>
@@ -67,7 +69,7 @@ export default function ManagePlots(){
                 </Card>
 
                 {/* Right side: controls */}
-                <Card sx={{ backgroundColor: '#F5F5F5', color: 'black', width: '250px', padding: '0', margin: "0 1rem",  marginTop: '0', height: '500px' }}>
+                <Card sx={{ backgroundColor: '#F5F5F5', borderRadius: '1rem', color: 'black', width: '25%', padding: '0', margin: "0 1rem",  marginTop: '0' }}>
                     <CardHeader
                         title={<Typography variant="h6" component="div" sx={{ color: 'black', padding: '0.5rem' }}>
                             Plots
@@ -83,10 +85,10 @@ export default function ManagePlots(){
             </div>
 
             {(visibleGraph !== -1) &&
-                <Card sx={{margin: '4rem 0', backgroundColor: '#1E1E1E'}}>
+                <Card sx={{margin: '4rem 0', backgroundColor: '#060606',  border: '2px dashed #222222', borderRadius: '1rem'}}>
                     <CardHeader
                         title={
-                        <Typography variant="h4" component="div" sx={{ color: '#B0CCD9', padding: '0.5rem' }}>
+                        <Typography variant="h5" component="div" sx={{ color: '#B0CDD9', padding: '0.5rem' }}>
                             Key Metrics
                         </Typography>}
                         />
