@@ -1,18 +1,20 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Card from "@mui/material/Card";
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import { Upload, TrendingUp } from "lucide-react"
 import './UploadCSV.css'
-import type { PlotData } from '../../utils/model';
+import { collectPlotData } from '../../utils/PlotDataUtils';
+
+const DOWNSAMPLE_RATE = 1;
 
 export default function UploadCSV(){
 
     const [file, setFile] = useState<File | null>(null)
     const [csvData, setCsvData] = useState<any[]>([])
     const [columns, setColumns] = useState<string[]>([])
-
-    const [collectedCsvData, setCollectedCsvData] = useState<PlotData[]>([])
+    const navigate = useNavigate();
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0]
@@ -25,33 +27,30 @@ export default function UploadCSV(){
         setFile(file)
         const reader = new FileReader()
         reader.onload = (e) => {
-        const text = e.target?.result as string
-        const lines = text.split("\n").filter((line) => line.trim())
-        const headers = lines[0].split(",").map((h) => h.trim())
+            const text = e.target?.result as string
+            const lines = text.split("\n").filter((line) => line.trim())
+            const headers = lines[0].split(",").map((h) => h.trim())
 
-        const data = lines.slice(1).map((line) => {
-            const values = line.split(",")
-            const row: any = {}
-            headers.forEach((header, index) => {
-            row[header] = values[index]?.trim() || ""
+            const data = lines.slice(1).map((line) => {
+                const values = line.split(",")
+                const row: any = {}
+                headers.forEach((header, index) => {
+                    row[header] = values[index]?.trim() || ""
+                })
+                return row
             })
-            return row
-        })
 
-        setColumns(headers)
-        setCsvData(data)
-        console.log("Parsed CSV Data:", data)
-
-        // Store data in localStorage for the chart page
-        localStorage.setItem("csvData", JSON.stringify(data))
-        localStorage.setItem("csvFileName", file.name)
+            setColumns(headers)
+            setCsvData(data)
         }
         reader.readAsText(file)
     }
 
     const navigateToChart = () => {
         // Use navigator.push() to go to /chart
-        console.log("NAVIGATING...")
+        const collectedData = collectPlotData(csvData, DOWNSAMPLE_RATE)
+        localStorage.setItem("collectedPlotData", JSON.stringify(collectedData))
+        navigate('/plots');
     }
     
 
@@ -117,6 +116,7 @@ export default function UploadCSV(){
                         backgroundColor: "#060606",
                         border: '2px solid #222222',
                         borderRadius: '0.5rem',
+                        margin: '2rem 0',
                     }}
                     >
                     <CardContent>
@@ -128,11 +128,11 @@ export default function UploadCSV(){
                             <div>
                                 <h4 className="text-sm font-medium mb-2 text-[#F5F5F5]">Sample Data (first 3 rows):</h4>
                                 <div className=".hide-scrollbar overflow-x-auto">
-                                    <table className="w-full text-xs border border-[#B0B0B0] rounded-md">
-                                        <thead>
-                                            <tr className="bg-[#B0CDD9]/20">
+                                    <table className="preview-table">
+                                        <thead className="w-full h-full">
+                                            <tr className="bg-[#222222]">
                                                 {columns.map((column, index) => (
-                                                    <th key={index} className="p-2 text-left border-r border-[#B0B0B0] last:border-r-0 text-[#B0CDD9]">
+                                                    <th key={index} className="preview-column-headers p-2 text-center text-[#B0CDD9] border-1 border-[#333333]">
                                                         {column}
                                                     </th>
                                                 ))}
@@ -140,9 +140,9 @@ export default function UploadCSV(){
                                         </thead>
                                         <tbody>
                                             {csvData.slice(0, 3).map((row, rowIndex) => (
-                                                <tr key={rowIndex} className="border-t border-[#B0B0B0]">
+                                                <tr key={rowIndex} className="">
                                                     {columns.map((column, colIndex) => (
-                                                        <td key={colIndex} className="p-2 border-r border-[#B0B0B0] last:border-r-0 text-[#F5F5F5]">
+                                                        <td key={colIndex} className="p-2 text-center text-[#F5F5F5] border-l border-r border-[#333333]">
                                                             {row[column]}
                                                         </td>
                                                     ))}
@@ -154,10 +154,14 @@ export default function UploadCSV(){
                             </div>
 
                             {/* Action Button */}
-                            <Button onClick={navigateToChart} variant='contained' className="w-full hover:opacity-90">
-                                <TrendingUp className="trending-icon h-4 w-4 mr-2 text-black" />
-                                Create Time-Series Charts
-                            </Button>
+                            <div className="flex justify-center">
+                                <Button onClick={navigateToChart} variant='contained' 
+                                    className="create-chart-button w-fit hover:opacity-90 !bg-[#F5F5F5]">
+                                    <TrendingUp className="trending-icon h-4 w-4 mx-2 text-[#060606]" />
+                                    <span className="text-[#060606]">Create Plots</span>
+                                </Button>
+                            </div>
+
                         </div>
                     </CardContent>
                 </Card>

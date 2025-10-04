@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .file-icon-container{
     margin: 1rem 0;
     padding: 0.75rem;
@@ -11,4 +15,18 @@
 
 .trending-icon{
     margin: 0 0.5rem;
+}
+
+.preview-column-headers{
+    font-weight: normal;
+    padding: 0.25rem;
+    /* width: 100%;
+    border-radius: 0.5rem;
+    border: 2px solid #222222; */
+    /* w-full text-xs border-2 border-[#222222] rounded-xl overflow-hidden */
+}
+
+.create-chart-button{
+    margin-top: 1rem !important;
+    background-color: #B0CDD9;
 }

@@ -1,14 +1,17 @@
 import {useState} from 'react';
 import { Radio, Button } from '@mui/material';
 import type { PlotData } from '../../utils/model';
+import './PlotControl.css';
 
 interface Props{
     plotData: PlotData[],
     // Take in function to view StatsPanel of certain column
-    setVisibleGraph: (index: number) => void
+    setVisibleGraph: (index: number) => void,
+    deletePlotData: (index: number) => void
+    
 }
 
-export default function ChannelControls({plotData, setVisibleGraph} : Props){
+export default function ChannelControls({plotData, setVisibleGraph, deletePlotData} : Props){
 
     // List representing view state for all plots
     const [plotStatuses, setPlotStatuses] = useState<boolean[]>(new Array(plotData.length).fill(false));
@@ -32,7 +35,7 @@ export default function ChannelControls({plotData, setVisibleGraph} : Props){
             {(plotData && plotData.length > 0) && 
                 plotData.map((currPlot, idx) => {
                     return (
-                        <div key={idx} className='flex w-full mb-1 items-center'>
+                        <div key={idx} className='plot-control-body flex w-full m-2 items-center'>
                             {/** Check button to toggle plot status and change what stats to view */}
                             {/** Plot title */}
                             {/** Button to remove the current plot */}
@@ -51,7 +54,12 @@ export default function ChannelControls({plotData, setVisibleGraph} : Props){
                                 variant='contained' 
                                 disableRipple
                                 size="small"
-                                >Del</Button>
+                                sx={{
+                                    flexShrink: 1,       // allow shrinking
+                                    minWidth: 0,         // remove default min-width
+                                }}
+                                onClick={() => deletePlotData(idx)}
+                                >X</Button>
                         </div>
                     )
                 })

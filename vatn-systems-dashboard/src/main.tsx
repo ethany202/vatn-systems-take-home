@@ -5,6 +5,7 @@ import './index.css'
 import Layout from './components/layout/Layout.tsx';
 import UploadCSV from './pages/upload/UploadCSV.tsx';
 import ManagePlots from './pages/plots/ManagePlots.tsx';
+import { collectPlotData } from './utils/PlotDataUtils.ts';
 
 
 const router = createBrowserRouter([
