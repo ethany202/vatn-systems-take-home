@@ -4,12 +4,13 @@ import Card from "@mui/material/Card";
 import CardContent from '@mui/material/CardContent';
 import Button from '@mui/material/Button';
 import { Upload, TrendingUp } from "lucide-react"
-import './UploadCSV.css'
+import './UploadCsv.css'
 import { collectPlotData } from '../../utils/PlotDataUtils';
+import { parseCsvFile } from '../../utils/FileReadUtils';
 
 // const DOWNSAMPLE_RATE = 3;
 
-export default function UploadCSV(){
+export default function UploadCsv(){
 
     const [file, setFile] = useState<File | null>(null)
     const [csvData, setCsvData] = useState<any[]>([])

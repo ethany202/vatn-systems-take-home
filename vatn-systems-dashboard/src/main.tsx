@@ -3,10 +3,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import Layout from './components/layout/Layout.tsx';
-import UploadCSV from './pages/upload/UploadCSV.tsx';
+import UploadCsv from './pages/upload/UploadCsv.tsx';
 import ManagePlots from './pages/plots/ManagePlots.tsx';
-import { collectPlotData } from './utils/PlotDataUtils.ts';
-
 
 const router = createBrowserRouter([
   {
@@ -17,7 +15,7 @@ const router = createBrowserRouter([
         // Add the two child paths
         index: true,
         path: '/upload',
-        element: <UploadCSV/>
+        element: <UploadCsv/>
       },
       {
         path: '/plots',
