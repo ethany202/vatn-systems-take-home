@@ -20,6 +20,23 @@ Each of the features for this application are accessible under two different rou
 
 Below illustrates the page upon navigating to the `/upload` path. As its name suggests, it represents the page of the application where users may upload CSV files. 
 
-!(alt-text)[readme-screenshots/upload-page.png]
+![alt-text](readme-screenshots/upload-page.png)
 
 Upon uploading any CSV file, a preview of the first three rows of content will be displayed.
+
+![alt-text](readme-screenshots/preview-section.png)
+
+### Manage Plots
+
+The `/plots` path contains all the plots and corresponding metrics. All plots are displayed on one chart, but can be toggled with a control panel on the right of the page:
+
+![alt-text](readme-screenshots/plot-section.png)
+
+The control panel lists out all plots, each of which can be deleted (deleting them only temporarily deletes them, as all of the plot data is cached in `localStorage` in place of a database). Moreover, the bottom of the control panel features a button to add more plots. 
+
+![alt-text](readme-screenshots/control-panel.png)
+
+Finally, the bottom of the page features all the key metrics for each time. 
+NOTE: To deal with the tremendous amount of data, a customizable downsample rate is applied upon uploading CSV files. As a result, depending on the downsample rate, these values might be inaccurate. In the future, these metrics could be calculated on the backend, minimizing the memory load of a user's browser.
+
+![alt-text](readme-screenshots/metrics-section.png)
