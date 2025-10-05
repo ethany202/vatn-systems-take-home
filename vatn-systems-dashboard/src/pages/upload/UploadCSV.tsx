@@ -6,9 +6,6 @@ import Button from '@mui/material/Button';
 import { Upload, TrendingUp } from "lucide-react"
 import './UploadCsv.css'
 import { collectPlotData } from '../../utils/PlotDataUtils';
-import { parseCsvFile } from '../../utils/FileReadUtils';
-
-// const DOWNSAMPLE_RATE = 3;
 
 export default function UploadCsv(){
 
