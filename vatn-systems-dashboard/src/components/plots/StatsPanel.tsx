@@ -1,6 +1,7 @@
 import { useMemo } from "react"
 import type { PlotMetrics, PlotPoint } from "../../utils/model"
 import { generatePlotMetrics } from "../../utils/PlotDataUtils"
+import './StatsPanel.css';
 
 interface Props {
     points: PlotPoint[]
@@ -15,25 +16,25 @@ export default function StatsPanel({points} : Props){
     // Displayed at the bottom of the plot: can be toggled by selecting a specific type of plot
     return (
         <div className="w-full max-w-2xl mx-auto mt-4">
-            <table className="w-full border-collapse rounded-lg overflow-hidden shadow bg-[#F5F5F5]">
+            <table className="w-full border-collapse rounded-lg overflow-hidden shadow bg-[#222222]">
                 <thead>
-                    <tr className="bg-[#B0CDD9] text-white">
-                        <th className="py-2 px-4 text-center">Max</th>
-                        <th className="py-2 px-4 text-center">Min</th>
-                        <th className="py-2 px-4 text-center">Mean</th>
-                        <th className="py-2 px-4 text-center">Median</th>
-                        <th className="py-2 px-4 text-center">Start</th>
-                        <th className="py-2 px-4 text-center">End</th>
+                    <tr className="bg-[#222222]">
+                        <th className="metric-column">Max</th>
+                        <th className="metric-column">Min</th>
+                        <th className="metric-column">Mean</th>
+                        <th className="metric-column">Median</th>
+                        <th className="metric-column">Start</th>
+                        <th className="metric-column">End</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td className="py-2 px-4 text-[#B0B0B0] font-semibold text-center">{metrics.max}</td>
-                        <td className="py-2 px-4 text-[#B0B0B0] font-semibold text-center">{metrics.min}</td>
-                        <td className="py-2 px-4 text-[#B0B0B0] font-semibold text-center">{metrics.mean.toFixed(2)}</td>
-                        <td className="py-2 px-4 text-[#B0B0B0] font-semibold text-center">{metrics.median}</td>
-                        <td className="py-2 px-4 text-[#B0B0B0] font-semibold text-center">{metrics.start}</td>
-                        <td className="py-2 px-4 text-[#B0B0B0] font-semibold text-center">{metrics.end}</td>
+                    <tr className="bg-[#111111]">
+                        <td className="metric-value">{metrics.max}</td>
+                        <td className="metric-value">{metrics.min}</td>
+                        <td className="metric-value">{metrics.mean.toFixed(2)}</td>
+                        <td className="metric-value">{metrics.median}</td>
+                        <td className="metric-value">{metrics.start}</td>
+                        <td className="metric-value">{metrics.end}</td>
                     </tr>
                 </tbody>
             </table>

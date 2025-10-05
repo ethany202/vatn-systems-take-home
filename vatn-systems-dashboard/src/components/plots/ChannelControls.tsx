@@ -1,34 +1,15 @@
-import {useState} from 'react';
 import { Radio, Button } from '@mui/material';
 import type { PlotData } from '../../utils/model';
-import './PlotControl.css';
+import './ChannelControls.css';
 
 interface Props{
     plotData: PlotData[],
-    // Take in function to view StatsPanel of certain column
+    visibleGraph: number,
     setVisibleGraph: (index: number) => void,
     deletePlotData: (index: number) => void
-    
 }
 
-export default function ChannelControls({plotData, setVisibleGraph, deletePlotData} : Props){
-
-    // List representing view state for all plots
-    const [plotStatuses, setPlotStatuses] = useState<boolean[]>(new Array(plotData.length).fill(false));
-    
-    const clearPlotStatuses = () => {
-        setPlotStatuses(new Array(plotData.length).fill(false));
-    }
-
-    const togglePlotStatus = (index: number) => {
-        clearPlotStatuses();
-        setPlotStatuses(prevStatuses => {
-            const newStatuses = [...prevStatuses];
-            newStatuses[index] = !newStatuses[index];
-            return newStatuses;
-        });
-        setVisibleGraph(index);
-    }
+export default function ChannelControls({plotData, visibleGraph, setVisibleGraph, deletePlotData} : Props){
 
     return (
         <div className="flex flex-col w-full">
@@ -36,13 +17,10 @@ export default function ChannelControls({plotData, setVisibleGraph, deletePlotDa
                 plotData.map((currPlot, idx) => {
                     return (
                         <div key={idx} className='plot-control-body flex w-full m-2 items-center'>
-                            {/** Check button to toggle plot status and change what stats to view */}
-                            {/** Plot title */}
-                            {/** Button to remove the current plot */}
                             <Radio 
                                 size='small'
-                                checked={plotStatuses[idx]} 
-                                onChange={() => togglePlotStatus(idx)}
+                                checked={idx == visibleGraph} 
+                                onChange={() => setVisibleGraph(idx)}
                                 sx={{
                                     color: currPlot.lineColor,
                                     "&.Mui-checked": { color: currPlot.lineColor },
@@ -57,6 +35,7 @@ export default function ChannelControls({plotData, setVisibleGraph, deletePlotDa
                                 sx={{
                                     flexShrink: 1,       // allow shrinking
                                     minWidth: 0,         // remove default min-width
+                                    backgroundColor: '#A70A0C',
                                 }}
                                 onClick={() => deletePlotData(idx)}
                                 >X</Button>

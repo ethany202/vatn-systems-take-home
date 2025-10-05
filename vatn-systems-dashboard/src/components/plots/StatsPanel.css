@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.metric-column{
+    padding: 0.5rem;
+    @apply text-center text-[#B0CDD9] border-1 border-[#333333];
+}
+
+.metric-value{
+    padding: 0.5rem;
+    @apply text-center text-[#F5F5F5] border-l border-r border-b border-[#333333];
+}

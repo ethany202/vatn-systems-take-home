@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
 import type { PlotData } from '../../utils/model';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { appendPlotData } from '../../utils/PlotDataUtils';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import ChannelControls from '../../components/plots/ChannelControls';
-import { Card, CardContent, CardHeader, Typography } from '@mui/material';
+import { Card, CardContent, CardHeader, Typography, Button } from '@mui/material';
 import StatsPanel from '../../components/plots/StatsPanel';
 
 export default function ManagePlots(){
 
-    // List of plot data (might make this a parameter)
-    // Generate random color data
-    const [allPlotData, setAllPlotData] = useState<PlotData[]>([]);
 
+    const [allPlotData, setAllPlotData] = useState<PlotData[]>([]);
     // Number representing the index for which stats panel is visible, -1 means none
     const [visibleGraph, setVisibleGraph] = useState<number>(-1);
 
@@ -21,6 +20,37 @@ export default function ManagePlots(){
 
         setAllPlotData(prevData => prevData.filter((_, i) => i !== index));
         setVisibleGraph(0);
+    }
+
+    const processFile = (file: File) => {
+        const reader = new FileReader()
+        reader.onload = (e) => {
+            const text = e.target?.result as string
+            const lines = text.split("\n").filter((line) => line.trim())
+            const headers = lines[0].split(",").map((h) => h.trim())
+
+            const data = lines.slice(1).map((line) => {
+                const values = line.split(",")
+                const row: any = {}
+                headers.forEach((header, index) => {
+                    row[header] = values[index]?.trim() || ""
+                })
+                return row
+            })
+
+            updatePlotData(data)
+
+        }
+        reader.readAsText(file)
+    }
+
+    const updatePlotData = (data : any[]) => {
+        const currentPlotData = JSON.parse(localStorage.getItem("collectedPlotData") || '[]')
+        const updatedPlotData = appendPlotData(data, currentPlotData);
+
+        localStorage.setItem("collectedPlotData", JSON.stringify(updatedPlotData))
+
+        setAllPlotData(updatedPlotData)
     }
 
     useEffect(() => {
@@ -57,10 +87,10 @@ export default function ManagePlots(){
                             <CardContent>
                                 <ResponsiveContainer width={'100%'} height={400}>
                                     <LineChart data={allPlotData[visibleGraph].points} tabIndex={-1}>
-                                        {/* <CartesianGrid strokeDasharray="2 2" /> */}
+                                        <CartesianGrid strokeDasharray="2 2" />
                                         <XAxis dataKey="x" />
                                         <YAxis width={30} label={{angle: -90}}/>
-                                        <Tooltip labelFormatter={(label) => {console.log(label); return `X: ${label}`}} formatter={(value) => [`Y: ${value}`]} />
+                                        <Tooltip labelFormatter={(label) => `X: ${label}`} formatter={(value) => [`Y: ${value}`]} />
                                         <Line type="monotone" dataKey="y" stroke={allPlotData[visibleGraph].lineColor} activeDot={{r: 8}}/>
                                     </LineChart>
                                 </ResponsiveContainer>
@@ -70,18 +100,58 @@ export default function ManagePlots(){
                 </Card>
 
                 {/* Right side: controls */}
-                <Card sx={{ backgroundColor: '#F5F5F5', borderRadius: '1rem', color: 'black', width: '15%', padding: '0', margin: "0 1rem",  marginTop: '0' }}>
+                <Card
+                sx={{
+                    backgroundColor: '#F5F5F5',
+                    borderRadius: '1rem',
+                    color: 'black',
+                    width: '15%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    padding: 0,
+                    margin: '0 1rem',
+                }}
+                >                    
                     <CardHeader
-                        title={<Typography variant="h6" component="div" sx={{ color: 'black', padding: '0.5rem' }}>
+                        title={
+                        <Typography variant="h6" component="div" sx={{ color: 'black', padding: '0.5rem' }}>
                             Plots
                         </Typography>}
                         />
-                    <CardContent>
-                        <ChannelControls
+                    <CardContent sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        flexGrow: 1,
+                        justifyContent: 'space-between',
+                        height: '100%',
+                        }}>
+                          <ChannelControls
                             plotData={allPlotData}
+                            visibleGraph={visibleGraph}
                             setVisibleGraph={setVisibleGraph}
                             deletePlotData={deletePlotData}
                             />
+                        <Button 
+                            tabIndex={-1} 
+                            variant='contained' 
+                            disableRipple
+                            size="small"
+                            sx = {{
+                                color: 'white',
+                                backgroundColor: '#333333',
+                            }}
+                            component="label"
+                            >Add Plot
+                            
+                            <input
+                                type="file"
+                                hidden                       // hide actual file input
+                                accept=".csv"                // adjust accepted types
+                                onChange={(e) => {
+                                    processFile(e.target.files[0]);
+                                }}/>
+                            </Button>
                     </CardContent>
                 </Card>
             </div>

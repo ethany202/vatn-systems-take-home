@@ -7,7 +7,7 @@ import { Upload, TrendingUp } from "lucide-react"
 import './UploadCSV.css'
 import { collectPlotData } from '../../utils/PlotDataUtils';
 
-const DOWNSAMPLE_RATE = 1;
+// const DOWNSAMPLE_RATE = 3;
 
 export default function UploadCSV(){
 
@@ -47,8 +47,7 @@ export default function UploadCSV(){
     }
 
     const navigateToChart = () => {
-        // Use navigator.push() to go to /chart
-        const collectedData = collectPlotData(csvData, DOWNSAMPLE_RATE)
+        const collectedData = collectPlotData(csvData)
         localStorage.setItem("collectedPlotData", JSON.stringify(collectedData))
         navigate('/plots');
     }
@@ -83,9 +82,10 @@ export default function UploadCSV(){
                         cursor: 'pointer',
                         position: 'relative',
                         marginBottom: '2rem',
-                        transition: 'border-color 0.2s',
+                        transition: 'border-color background-color 0.2s',
                         '&:hover': {
                             borderColor: '#B0CDD9',
+                            backgroundColor: '#121212',
                         },
                     }}
                 >

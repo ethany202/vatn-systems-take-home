@@ -20,10 +20,6 @@
 .preview-column-headers{
     font-weight: normal;
     padding: 0.25rem;
-    /* width: 100%;
-    border-radius: 0.5rem;
-    border: 2px solid #222222; */
-    /* w-full text-xs border-2 border-[#222222] rounded-xl overflow-hidden */
 }
 
 .create-chart-button{

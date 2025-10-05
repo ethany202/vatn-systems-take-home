@@ -1,12 +1,13 @@
 import type { PlotData, PlotPoint, PlotMetrics } from "./model";
 
 const timeColumnRegex = new RegExp(`\btime\b`, 'i');
+const DOWNSAMPLE_RATE = 2;
 
 /**
  * 
  * @param parsedData List of any objects, in which any consists of key-value pairs representing column name and value
  */
-export function collectPlotData(parsedData: any[], downsampleRate: number = 1) : PlotData[] {
+export function collectPlotData(parsedData: any[], downsampleRate: number = DOWNSAMPLE_RATE) : PlotData[] {
     const plotDataMap = new Map<string, PlotData>();
 
     if(parsedData.length === 0) return [];
@@ -26,7 +27,7 @@ export function collectPlotData(parsedData: any[], downsampleRate: number = 1) :
     for (index = 0; index < parsedData.length; index+=downsampleRate) {
         for (const columnName in parsedData[index]) {
             if(columnName === '' || columnName.toLowerCase().match(timeColumnRegex)) continue; // Skip empty columns or time column
-            
+
             const plotData = plotDataMap.get(columnName);
             plotData?.points.push({
                 x: index, // Use index as x value (1-based)
@@ -35,10 +36,16 @@ export function collectPlotData(parsedData: any[], downsampleRate: number = 1) :
         }
     }
 
-    console.log("Collected Plot Data:", Array.from(plotDataMap.values()));
-
     return Array.from(plotDataMap.values());
 }
+
+export function appendPlotData(parsedData: any[], existingPlotData: PlotData[], downsampleRate: number = DOWNSAMPLE_RATE) : PlotData[] {    
+    const newPlotData = collectPlotData(parsedData, downsampleRate);
+
+    // Merge newPlotData into existingPlotData
+    return [...existingPlotData, ...newPlotData];
+}
+
 
 export function generatePlotTitle(plotData: PlotData){
     const {
